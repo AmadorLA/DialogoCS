@@ -1,38 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace DialogoCS
 {
     public partial class Form1 : Form
     {
+        Articulo[] a;
+        int p = 0;
         public Form1()
         {
             InitializeComponent();
-        }
+            a = new Articulo[5];
 
+        }
         private void btnAbrir_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialogo = new OpenFileDialog();
-            if (dialogo.ShowDialog() == DialogResult.OK) ;
+            OpenFileDialog btnAbrir = new OpenFileDialog();
+            if (btnAbrir.ShowDialog() == DialogResult.OK) 
             {
-                MessageBox.Show(dialogo.FileName);
+                string direction = btnAbrir.FileName;
+
+                Process proceso = new Process();
+                proceso.StartInfo.FileName = direction;
+                proceso.Start();
             }
+            
+           
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialogo = new SaveFileDialog();
-          if  (dialogo.ShowDialog() == DialogResult.OK);
+          if  (dialogo.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show(dialogo.FileName);
+                using (StreamWriter archivo = new StreamWriter(dialogo.FileName)) 
+                {
+                    for (int i = 0; i < a.Length; i++)
+                    {
+                        if (a[i] != null)
+                        {
+                            archivo.WriteLineAsync(a[i].ToString());
+                        }
+                       
+                    }
+                }
             }
+        }
+
+            private void btnInsertar_Click(object sender, EventArgs e)
+        {
+            Articulo n = new Articulo();
+            n.Nombre = txtNombre.Text;
+            n.Precio = double.Parse( txtPrecio.Text);
+
+            a[p] = n;
+            lstArreglo.Items.Add(a[p]);
+
+            p++;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
